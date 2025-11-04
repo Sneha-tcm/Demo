@@ -10,24 +10,36 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
       break;
     case "CALL_OLLAMA":
       console.log("calling ollama")
-      try {
-       const res = await fetch("http://127.0.0.1:11435/api/tags", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    model: "tinyllama",
-    messages: [{ role: "user", content: msg.payload.prompt }]
-  })
-});
-        console.log("Status:", res.status, res.statusText);
-        const text = await res.text(); // get raw text first
-        console.log("Response text:", text);
-        const data = await res.json();
-        sendResponse(data);
-      } catch (err) {
-        console.error("❌ Ollama fetch failed:", err);
-        sendResponse({ error: err.message });
+      const OLLAMA_API_KEY = "7f45a572cf934e9e8628ddbb0270ace4.dgCQnMABb_97Im-lX-O75RF3"; // ⚠ Only for personal use
+       try {
+  const response = await fetch("https://ollama.com/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${OLLAMA_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: "gemma:4b",
+      messages: [
+        { role: "system", content: "You are an AI assistant that maps form fields to spreadsheet columns." },
+        { role: "user", content: msg.payload.prompt }
+      ],
+      stream: true
+    })
+  });
+
+  const data = await response.json();
+  console.log("AI Response:", data);
+
+  sendResponse({ result: data });
+} catch (err) {
+  console.error(err);
+  sendResponse({ error: err.message });
+}
+
+return true;
+ // Keep message channel open for async
       }
-      return true;
-  }
 });
+
+ 

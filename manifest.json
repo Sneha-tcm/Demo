@@ -1,9 +1,9 @@
 ﻿{
   "manifest_version": 3,
-  "name": "AI Form Autofill",
+  "name": "AI map Form Autofill",
   "version": "1.0",
   "description": "Detect and autofill form fields using AI suggestions from Google Sheets.",
-  "permissions": ["activeTab", "scripting", "storage","http://localhost:11435/"],
+  "permissions": ["activeTab", "scripting", "storage","http://localhost:11435/","https://ollama.com/api/chat"],
   "host_permissions": ["<all_urls>"],
 
   "background": {
